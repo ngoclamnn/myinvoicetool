@@ -5,10 +5,18 @@
 
   // EDITING STARTS HERE (you dont need to edit anything above this line)
 
-  var db = new PouchDB('invoicetool');
+  var dbInvoice = new PouchDB('invoicetool');
   var remoteCouch = 'http://admin:Aa123456@ec2-3-0-184-56.ap-southeast-1.compute.amazonaws.com:5984/invoicetool';
 
-  db.changes({
+  var dbProduct = new PouchDB('products');
+  var remoteCouch = 'http://admin:Aa123456@ec2-3-0-184-56.ap-southeast-1.compute.amazonaws.com:5984/products';
+
+  var dbProperties = new PouchDB('properties');
+  var remoteCouch = 'http://admin:Aa123456@ec2-3-0-184-56.ap-southeast-1.compute.amazonaws.com:5984/properties';
+
+
+
+  dbInvoice.changes({
     since: 'now',
     live: true
   }).on('change', showInvoices);
@@ -20,7 +28,7 @@
       title: text,
       completed: false
     };
-    db.put(todo, function callback(err, result) {
+    dbInvoice.put(todo, function callback(err, result) {
       if (!err) {
         console.log('Successfully posted a todo!');
       }
@@ -28,7 +36,7 @@
   }
   // Show the current list of todos by reading them from the database
   function showInvoices() {
-    db.allDocs({include_docs: true, descending: true}, function(err, doc) {
+    dbInvoice.allDocs({include_docs: true, descending: true}, function(err, doc) {
       redrawTodosUI(doc.rows);
     });
   }
@@ -37,8 +45,8 @@
   function sync() {
     syncDom.setAttribute('data-sync-state', 'syncing');
     var opts = {live: true};
-    db.replicate.to(remoteCouch, opts, syncError);
-    db.replicate.from(remoteCouch, opts, syncError);
+    dbInvoice.replicate.to(remoteCouch, opts, syncError);
+    dbInvoice.replicate.from(remoteCouch, opts, syncError);
   }
 
   // EDITING STARTS HERE (you dont need to edit anything below this line)
