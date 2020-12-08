@@ -1,8 +1,8 @@
 
 var records;
-
+var db = new Database();
 (async function () {
-    records = await getInvoices();
+    records = await db.getInvoices();
     console.log("records", records.invoices)
     var i = 1
     records.invoices.forEach(function (element) {
@@ -35,8 +35,18 @@ var records;
             records: records.invoices,
             columns: [
                 { field: 'id', text: 'ID', size: '50px', sortable: true },
-                { field: 'title', text: 'Name', size: '50%', sortable: true },
-                { field: 'total', text: 'Total', size: '50%', sortable: true }
+                { field: 'stt', text: 'STT', size: '50px', sortable: true },
+                { field: 'tenKh', text: 'Ten KH', size: '50px', sortable: true },
+                { field: 'chitietSpMau', text: 'Chi tiet SP/Mau', size: '50%', sortable: true },
+                { field: 'loai', text: 'Loai', size: '50%', sortable: true },
+                { field: 'ngayGiaoHang', text: 'Ngay giao hang', size: '50%', sortable: true },
+                { field: 'vai', text: 'Vai', size: '50%', sortable: true },
+                { field: 'doanhThu', text: 'Doanh thu', size: '50%', sortable: true },
+                { field: 'chiPhiNPL', text: 'Chi phi Nguyen phu lieu', size: '50%', sortable: true },
+                { field: 'chiPhiGiaCongMay', text: 'Chi phi gia cong may', size: '50%', sortable: true },
+                { field: 'chiPhiDichVu', text: 'Chi phi dich vu', size: '50%', sortable: true },
+                { field: 'chiPhiChung', text: 'Chi phi chung', size: '50%', sortable: true },
+                { field: 'tongCong', text: 'Tong cong', size: '50%', sortable: true }
             ],
             onDblClick: function (event) {
                 gridRowClicked(event, this);
@@ -60,22 +70,22 @@ var records;
 
         // EDITING STARTS HERE (you dont need to edit anything above this line)
 
-        dbInvoice.changes({
+        db.dbInvoice.changes({
             since: 'now',
             live: true
-        }).on('change', dbChanges);
+        }).on('change', db.dbChanges);
 
         // Initialise a sync with the remote server
         function sync() {
             syncDom.setAttribute('data-sync-state', 'syncing');
             var opts = { live: true };
-            dbInvoice.replicate.to(remoteCouch, opts, syncError);
-            dbInvoice.replicate.from(remoteCouch, opts, syncError);
+            db.dbInvoice.replicate.to(db.remoteCouch, opts, syncError);
+            db.dbInvoice.replicate.from(db.remoteCouch, opts, syncError);
         }
         function syncError() {
             syncDom.setAttribute('data-sync-state', 'error');
         }
-        if (remoteCouch) {
+        if (db.remoteCouch) {
             sync();
         }
         $('#main').w2layout(config.layout);
@@ -100,7 +110,7 @@ function gridRowClicked(event, grid, addNew) {
                 title: 'Edit record',
                 body: '<div id="form" style="width: 100%; height: 100%;"></div>',
                 style: 'padding: 15px 0px 0px 0px',
-                width: 500,
+                width: 1000,
                 height: 300,
                 showMax: true,
                 onOpen: function (event) {
@@ -116,7 +126,7 @@ function gridRowClicked(event, grid, addNew) {
                 title: 'Add record',
                 body: '<div id="form" style="width: 100%; height: 100%;"></div>',
                 style: 'padding: 15px 0px 0px 0px',
-                width: 500,
+                width: 1000,
                 height: 300,
                 showMax: true,
                 onOpen: function (event) {
