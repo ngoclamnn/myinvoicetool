@@ -1,15 +1,5 @@
+function Database() {
 
-
-
-
-
-
-
-
-
-
-export default class Database {
-    
   constructor() {
     this.dbInvoice = new PouchDB('invoicetool');
     this.remoteCouch = 'http://admin:Aa123456@ec2-3-0-184-56.ap-southeast-1.compute.amazonaws.com:5984/invoicetool';
@@ -19,17 +9,17 @@ export default class Database {
     ]);
   }
 
-  async get getInvoices() {
+  Database.prototype.getInvoices = async function () {
     try {
-        var result = await dbInvoice.rel.find('invoice', "BHS01");
-        return result;
+      var result = await dbInvoice.rel.find('invoice', "BHS01");
+      return result;
     } catch (err) {
-        console.log(err);
-        return undefined;
+      console.log(err);
+      return undefined;
     }
-  } 
+  }
 
-  async get addInvoice(text) {
+  Database.prototype.addInvoice = async function (text) {
     var data = {
       id: "BHS01",
       title: text,
@@ -45,8 +35,8 @@ export default class Database {
           productId: 3,
           currentPrice: 100,
           currentQuantity: 100
-  
-        }, 
+
+        },
         {
           loaiChiPhi: "May",
           productId: 4,
@@ -54,7 +44,7 @@ export default class Database {
           currentQuantity: 100
         }
       ],
-  
+
       products: [
         2, 3, 4
       ]
@@ -68,7 +58,7 @@ export default class Database {
     }
   }
 
-  async get addProduct(text) {
+  Database.prototype.addProduct = async function (text) {
     var data = {
       id: 2,
       name: "product 2",
@@ -98,34 +88,7 @@ export default class Database {
     }
   }
 
-  get dbChanges(){
+  Database.prototype.dbChanges = function () {
     console.log("database has changed")
   }
-  
-  get monthlyPayment() {
-      let monthlyRate = this.rate / 100 / 12;
-      return this.principal * monthlyRate / (1 - (Math.pow(1/(1 + monthlyRate),
-              this.years * 12)));
-  }
-  
-  get amortization() {
-      let monthlyPayment = this.monthlyPayment;
-      let monthlyRate = this.rate / 100 / 12;
-      let balance = this.principal;
-      let amortization = [];
-      for (let y=0; y<this.years; y++) {
-          let interestY = 0;
-          let principalY = 0;
-          for (let m=0; m<12; m++) {
-              let interestM = balance * monthlyRate;
-              let principalM = monthlyPayment - interestM;
-              interestY = interestY + interestM;
-              principalY = principalY + principalM;
-              balance = balance - principalM;
-          }
-          amortization.push({principalY, interestY, balance});
-      }
-      return amortization;
-  }
-  
 }

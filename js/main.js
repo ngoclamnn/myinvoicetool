@@ -10,7 +10,7 @@ var records;
         element.recid = i;
         i++;
     })
-    var config = {
+    var config = {  
         layout: {
             name: 'layout',
             padding: 4,
@@ -82,12 +82,6 @@ var records;
         w2ui.layout.html('main', $().w2grid(config.grid));
     });
 })();
-
-
-
-
-
-
 
 function gridRowClicked(event, grid, addNew) {
     if (w2ui.form) {
