@@ -9,7 +9,7 @@ function Database() {
 
 Database.prototype.getInvoices = async function () {
   try {
-    var result = await this.dbInvoice.rel.find('invoice', "BHS01");
+    var result = await this.dbInvoice.rel.find('invoice');
     return result;
   } catch (err) {
     console.log(err);
@@ -17,39 +17,34 @@ Database.prototype.getInvoices = async function () {
   }
 }
 
-Database.prototype.addInvoice = async function (text) {
-  var data = {
-    id: "BHS01",
-    title: text,
-    danhSachChiPhi: [
-      {
-        loaiChiPhi: "Chung",
-        productId: 2,
-        price: 100,
-        quantity: 100
-      },
-      {
-        loaiChiPhi: "HoanPhat",
-        productId: 3,
-        currentPrice: 100,
-        currentQuantity: 100
-
-      },
-      {
-        loaiChiPhi: "May",
-        productId: 4,
-        currentPrice: 100,
-        currentQuantity: 100
-      }
-    ],
-
-    products: [
-      2, 3, 4
-    ]
-  };
+Database.prototype.addInvoice = async function (record) {
   try {
-    await this.dbInvoice.rel.save('invoice', data);
-    console.log("Invoice added")
+    var created = await this.dbInvoice.rel.save('invoice', record);
+    record.rev = saved.rev;
+    console.log("Invoice added", created)
+  }
+  catch (err) {
+    console.log(err);
+  }
+  return record
+}
+
+Database.prototype.saveInvoice = async function (record) {
+  try {
+    var saved = await this.dbInvoice.rel.save('invoice', record);
+    record.rev = saved.rev;
+    console.log("Invoice saved", saved)
+  }
+  catch (err) {
+    console.log(err);
+  }
+  return record
+}
+
+Database.prototype.deleteInvoice = async function (record) {
+  try {
+    await this.dbInvoice.rel.del('invoice', record);
+    console.log("Invoice deleted")
   }
   catch (err) {
     console.log(err);
